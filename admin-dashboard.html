@@ -598,7 +598,7 @@
                         <circle class="circle-progress" cx="75" cy="75" r="65"></circle>
                     </svg>
                     <div class="progress-content">
-                        <span class="progress-value" id="customersCount">0</span>
+                        <!-- Number removed - will show only in progress bar -->
                     </div>
                 </div>
                 <div class="stat-label">Customers</div>
@@ -617,7 +617,7 @@
                         <circle class="circle-progress" cx="75" cy="75" r="65"></circle>
                     </svg>
                     <div class="progress-content">
-                        <span class="progress-value" id="ordersCount">0</span>
+                        <!-- Number removed - will show only in progress bar -->
                     </div>
                 </div>
                 <div class="stat-label">Orders</div>
@@ -636,7 +636,7 @@
                         <circle class="circle-progress" cx="75" cy="75" r="65"></circle>
                     </svg>
                     <div class="progress-content">
-                        <span class="progress-value" id="revenue">0</span>
+                        <!-- Number removed - will show only in progress bar -->
                     </div>
                 </div>
                 <div class="stat-label">Revenue</div>
@@ -655,7 +655,7 @@
                         <circle class="circle-progress" cx="75" cy="75" r="65"></circle>
                     </svg>
                     <div class="progress-content">
-                        <span class="progress-value" id="visitsCount">0</span>
+                        <!-- Number removed - will show only in progress bar -->
                     </div>
                 </div>
                 <div class="stat-label">Visits</div>
@@ -805,7 +805,6 @@
                 document.getElementById('customersProgress').classList.add('animate');
                 document.getElementById('customersBar').style.setProperty('--bar-width', stats.customers.percent + '%');
                 document.getElementById('customersBar').classList.add('animate');
-                animateValue('customersCount', 0, stats.customers.value, 1800);
                 animateValue('customersBarText', 0, stats.customers.value, 1800);
             }, 100);
             
@@ -815,7 +814,6 @@
                 document.getElementById('ordersProgress').classList.add('animate');
                 document.getElementById('ordersBar').style.setProperty('--bar-width', stats.orders.percent + '%');
                 document.getElementById('ordersBar').classList.add('animate');
-                animateValue('ordersCount', 0, stats.orders.value, 1800);
                 animateValue('ordersBarText', 0, stats.orders.value, 1800);
             }, 300);
             
@@ -825,7 +823,6 @@
                 document.getElementById('revenueProgress').classList.add('animate');
                 document.getElementById('revenueBar').style.setProperty('--bar-width', stats.revenue.percent + '%');
                 document.getElementById('revenueBar').classList.add('animate');
-                animateValue('revenue', 0, stats.revenue.value, 1800, true);
                 // Update bar text for revenue
                 let revenueStart = 0;
                 const revenueTimer = setInterval(() => {
@@ -845,7 +842,6 @@
                 document.getElementById('visitsProgress').classList.add('animate');
                 document.getElementById('visitsBar').style.setProperty('--bar-width', stats.visits.percent + '%');
                 document.getElementById('visitsBar').classList.add('animate');
-                animateValue('visitsCount', 0, stats.visits.value, 1800);
                 animateValue('visitsBarText', 0, stats.visits.value, 1800);
             }, 700);
         }
