@@ -160,6 +160,14 @@
             text-align: center;
         }
         
+        .progress-label {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #000;
+            display: block;
+            letter-spacing: 1px;
+        }
+        
         .progress-icon {
             font-size: 2.5rem;
             display: block;
@@ -173,7 +181,7 @@
             display: block;
         }
         
-        /* Stat Label */
+        /* Stat Label (removed - now inside circle) */
         .stat-label {
             font-size: 1rem;
             color: rgba(0,0,0,0.6);
@@ -598,10 +606,9 @@
                         <circle class="circle-progress" cx="75" cy="75" r="65"></circle>
                     </svg>
                     <div class="progress-content">
-                        <!-- Number removed - will show only in progress bar -->
+                        <span class="progress-label">CUSTOMERS</span>
                     </div>
                 </div>
-                <div class="stat-label">Customers</div>
                 <div class="progress-bar-container">
                     <div class="progress-bar" id="customersBar">
                         <span class="progress-bar-text" id="customersBarText">0</span>
@@ -617,10 +624,9 @@
                         <circle class="circle-progress" cx="75" cy="75" r="65"></circle>
                     </svg>
                     <div class="progress-content">
-                        <!-- Number removed - will show only in progress bar -->
+                        <span class="progress-label">ORDERS</span>
                     </div>
                 </div>
-                <div class="stat-label">Orders</div>
                 <div class="progress-bar-container">
                     <div class="progress-bar" id="ordersBar">
                         <span class="progress-bar-text" id="ordersBarText">0</span>
@@ -636,10 +642,9 @@
                         <circle class="circle-progress" cx="75" cy="75" r="65"></circle>
                     </svg>
                     <div class="progress-content">
-                        <!-- Number removed - will show only in progress bar -->
+                        <span class="progress-label">REVENUE</span>
                     </div>
                 </div>
-                <div class="stat-label">Revenue</div>
                 <div class="progress-bar-container">
                     <div class="progress-bar" id="revenueBar">
                         <span class="progress-bar-text" id="revenueBarText">0 SAR</span>
@@ -655,10 +660,9 @@
                         <circle class="circle-progress" cx="75" cy="75" r="65"></circle>
                     </svg>
                     <div class="progress-content">
-                        <!-- Number removed - will show only in progress bar -->
+                        <span class="progress-label">VISITS</span>
                     </div>
                 </div>
-                <div class="stat-label">Visits</div>
                 <div class="progress-bar-container">
                     <div class="progress-bar" id="visitsBar">
                         <span class="progress-bar-text" id="visitsBarText">0</span>
