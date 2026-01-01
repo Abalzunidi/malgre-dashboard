@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Malgré</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-weight: 700;
+            background-color: #fffa87;
+            min-height: 100vh;
+        }
+        
+        /* Header */
+        .header {
+            background: #000;
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+        
+        .logo {
+            height: 70px;
+            width: auto;
+            filter: brightness(0) invert(1);
+        }
+        
+        .dashboard-title {
+            font-size: 2rem;
+            color: #fffa87;
+        }
+        
+        .logout-button {
+            padding: 0.75rem 2rem;
+            background: #fffa87;
+            color: #000;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.125rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            box-shadow: 0 2px 10px rgba(255,250,135,0.3);
+        }
+        
+        .logout-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(255,250,135,0.5);
+        }
+        
+        /* Main Content */
+        .main-content {
+            padding: 2.5rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .section-header {
+            font-size: 1.5rem;
+            color: #000;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            opacity: 0.6;
+        }
+        
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 4rem;
+        }
+        
+        @media (max-width: 1200px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Stat Card */
+        .stat-card {
+            background: linear-gradient(135deg, rgba(0,0,0,0.08) 0%, rgba(0,0,0,0.03) 100%);
+            border: 3px solid rgba(0,0,0,0.1);
+            border-radius: 20px;
+            padding: 2rem 1.5rem;
+            transition: all 0.4s ease;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+            text-align: center;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 50px rgba(0,0,0,0.2);
+            border-color: #000;
+        }
+        
+        /* Circular Progress */
+        .circular-progress {
+            position: relative;
+            width: 140px;
+            height: 140px;
+            margin: 0 auto 1.5rem;
+        }
+        
+        .circular-progress svg {
+            transform: rotate(-90deg);
+            width: 100%;
+            height: 100%;
+        }
+        
+        .circle-bg {
+            fill: none;
+            stroke: rgba(0,0,0,0.1);
+            stroke-width: 10;
+        }
+        
+        .circle-progress {
+            fill: none;
+            stroke: #000;
+            stroke-width: 10;
+            stroke-linecap: round;
+            stroke-dasharray: 410;
+            stroke-dashoffset: 410;
+            transition: stroke-dashoffset 2s ease;
+        }
+        
+        .circular-progress.animate .circle-progress {
+            stroke-dashoffset: calc(410 - (410 * var(--progress)) / 100);
+        }
+        
+        .progress-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+        
+        .progress-icon {
+            font-size: 2.5rem;
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+        
+        .progress-value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #000;
+            display: block;
+        }
+        
+        /* Stat Label */
+        .stat-label {
+            font-size: 1rem;
+            color: rgba(0,0,0,0.6);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+        
+        /* Progress Bar */
+        .progress-bar-container {
+            width: 100%;
+            height: 28px;
+            background: rgba(0,0,0,0.1);
+            border-radius: 14px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #000 0%, #333 100%);
+            border-radius: 14px;
+            width: 0%;
+            transition: width 2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 0.75rem;
+        }
+        
+        .progress-bar.animate {
+            width: var(--bar-width);
+        }
+        
+        .progress-bar-text {
+            color: #fffa87;
+            font-size: 0.875rem;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+        
+        /* Activity Log Section - Improved */
+        .activity-section {
+            background: linear-gradient(135deg, rgba(0,0,0,0.08) 0%, rgba(0,0,0,0.03) 100%);
+            border: 3px solid rgba(0,0,0,0.1);
+            border-radius: 30px;
+            padding: 2.5rem;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+        }
+        
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            color: #000;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .activity-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 0.75rem;
+        }
+        
+        .activity-table th {
+            background: #000;
+            color: #fffa87;
+            padding: 1.25rem;
+            text-align: left;
+            font-size: 1.125rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .activity-table th:first-child {
+            border-radius: 15px 0 0 15px;
+        }
+        
+        .activity-table th:last-child {
+            border-radius: 0 15px 15px 0;
+        }
+        
+        .activity-table td {
+            background: rgba(255,255,255,0.6);
+            padding: 1.25rem;
+            font-size: 1rem;
+            font-weight: 600;
+            color: rgba(0,0,0,0.8);
+            border: 2px solid transparent;
+        }
+        
+        .activity-table tbody tr {
+            transition: all 0.3s ease;
+        }
+        
+        .activity-table tbody tr:hover td {
+            background: rgba(255,255,255,0.9);
+            border-color: rgba(0,0,0,0.1);
+            transform: scale(1.01);
+        }
+        
+        .activity-table tbody tr td:first-child {
+            border-radius: 15px 0 0 15px;
+        }
+        
+        .activity-table tbody tr td:last-child {
+            border-radius: 0 15px 15px 0;
+        }
+        
+        .activity-date {
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 0.25rem;
+        }
+        
+        .activity-time {
+            color: rgba(0,0,0,0.5);
+            font-size: 0.875rem;
+            font-weight: 400;
+        }
+        
+        .activity-employee {
+            font-weight: 700;
+            color: #000;
+        }
+        
+        .activity-action {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: #000;
+            color: #fffa87;
+            border-radius: 25px;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .activity-action.login {
+            background: #2ecc71;
+        }
+        
+        .activity-action.order {
+            background: #3498db;
+        }
+        
+        .activity-action.edit {
+            background: #f39c12;
+        }
+        
+        .activity-action.comment {
+            background: #9b59b6;
+        }
+        
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 4rem;
+            color: rgba(0,0,0,0.3);
+            font-size: 1.5rem;
+        }
+        
+        /* Footer */
+        footer {
+            width: 100%;
+            padding: 0;
+            margin-top: 3rem;
+        }
+        
+        .footer-text {
+            font-size: 1rem;
+            padding: 2rem 2rem;
+            display: block;
+            width: 100%;
+            border-radius: 0;
+            color: #fff;
+            background-color: #cc0000;
+            line-height: 1.8;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+            border-top: 4px solid #990000;
+            text-align: center;
+        }
+        
+        .footer-title {
+            font-size: 1.25rem;
+            font-weight: 900;
+            letter-spacing: 1px;
+            margin-bottom: 1rem;
+            display: block;
+        }
+        
+        .footer-copyright {
+            display: block;
+            margin-top: 1rem;
+            font-size: 0.875rem;
+            opacity: 0.9;
+            border-top: 2px solid rgba(255,255,255,0.3);
+            padding-top: 1rem;
+        }
+        
+        /* Activity Log Blur for Non-Admin */
+        .activity-section.blurred {
+            position: relative;
+        }
+        
+        .activity-section.blurred .activity-table {
+            filter: blur(8px);
+            pointer-events: none;
+            user-select: none;
+        }
+        
+        .activity-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0,0,0,0.9);
+            color: #fffa87;
+            padding: 2rem 3rem;
+            border-radius: 20px;
+            text-align: center;
+            z-index: 100;
+            display: none;
+        }
+        
+        .activity-section.blurred .activity-overlay {
+            display: block;
+        }
+        
+        .activity-overlay-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .activity-overlay-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .activity-overlay-text {
+            font-size: 1rem;
+            opacity: 0.8;
+        }
+        
+        /* Welcome Popup */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .popup-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .welcome-popup {
+            background: #fffa87;
+            padding: 3rem;
+            border: 4px solid #000;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            transform: scale(0.8);
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 50px rgba(0,0,0,0.5);
+        }
+        
+        .popup-overlay.show .welcome-popup {
+            transform: scale(1);
+        }
+        
+        .popup-icon {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .popup-title {
+            font-size: 2rem;
+            color: #000;
+            margin-bottom: 1rem;
+        }
+        
+        .popup-message {
+            font-size: 1.25rem;
+            color: rgba(0,0,0,0.7);
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+        }
+        
+        .popup-employee-name {
+            font-size: 1.5rem;
+            color: #000;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .popup-employee-id {
+            font-size: 1.125rem;
+            color: rgba(0,0,0,0.6);
+            margin-bottom: 2rem;
+        }
+        
+        .popup-close-btn {
+            background: #000;
+            color: #fffa87;
+            padding: 1rem 3rem;
+            border: none;
+            font-size: 1.25rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Cormorant Garamond', Georgia, serif;
+        }
+        
+        .popup-close-btn:hover {
+            background: #fffa87;
+            color: #000;
+            border: 3px solid #000;
+        }
+        
+        /* Warning Box Below Popup */
+        .popup-warning {
+            background: #cc0000;
+            color: #fff;
+            padding: 1.5rem 2rem;
+            margin-top: 1.5rem;
+            border: 4px solid #990000;
+            clip-path: polygon(
+                15px 0, 
+                calc(100% - 15px) 0, 
+                100% 15px, 
+                100% calc(100% - 15px), 
+                calc(100% - 15px) 100%, 
+                15px 100%, 
+                0 calc(100% - 15px), 
+                0 15px
+            );
+            position: relative;
+        }
+        
+        .popup-warning-title {
+            font-size: 1.125rem;
+            font-weight: 900;
+            letter-spacing: 1px;
+            margin-bottom: 0.75rem;
+            display: block;
+        }
+        
+        .popup-warning-text {
+            font-size: 0.875rem;
+            line-height: 1.6;
+            font-weight: 600;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .activity-table {
+                font-size: 0.875rem;
+            }
+            
+            .activity-table th,
+            .activity-table td {
+                padding: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Welcome Popup -->
+    <div class="popup-overlay" id="welcomePopup">
+        <div class="welcome-popup">
+            <div class="popup-icon">👋</div>
+            <h2 class="popup-title">Welcome Back!</h2>
+            <p class="popup-message">You have successfully logged in</p>
+            <p class="popup-employee-name" id="employeeName">Admin User</p>
+            <p class="popup-employee-id" id="employeeId">Employee ID: #A001</p>
+            <button class="popup-close-btn" onclick="closeWelcomePopup()">Continue to Dashboard</button>
+            
+            <!-- Warning Box -->
+            <div class="popup-warning">
+                <span class="popup-warning-title">⚠️ CONFIDENTIAL & RESTRICTED ACCESS ⚠️</span>
+                <p class="popup-warning-text">
+                    This system is strictly monitored. All activities are logged and tracked. 
+                    Unauthorized access will result in immediate legal action.
+                </p>
+                <p class="popup-warning-text" style="margin-top: 0.75rem; font-size: 0.75rem; opacity: 0.9;">
+                    © 2025 Malgré - All Rights Reserved
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <div class="header">
+        <div class="header-left">
+            <img src="L2.png" alt="Malgré Logo" class="logo">
+            <h1 class="dashboard-title">Admin Dashboard</h1>
+        </div>
+        <button class="logout-button" onclick="logout()">Logout</button>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Stats Section -->
+        <h2 class="section-header">Overview Statistics</h2>
+        
+        <!-- Stats Grid (4 Cards) -->
+        <div class="stats-grid">
+            <!-- Customers -->
+            <div class="stat-card">
+                <div class="circular-progress" id="customersProgress">
+                    <svg viewBox="0 0 150 150">
+                        <circle class="circle-bg" cx="75" cy="75" r="65"></circle>
+                        <circle class="circle-progress" cx="75" cy="75" r="65"></circle>
+                    </svg>
+                    <div class="progress-content">
+                        <span class="progress-icon">👤</span>
+                        <span class="progress-value" id="customersCount">0</span>
+                    </div>
+                </div>
+                <div class="stat-label">Customers</div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="customersBar">
+                        <span class="progress-bar-text" id="customersBarText">0</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Orders -->
+            <div class="stat-card">
+                <div class="circular-progress" id="ordersProgress">
+                    <svg viewBox="0 0 150 150">
+                        <circle class="circle-bg" cx="75" cy="75" r="65"></circle>
+                        <circle class="circle-progress" cx="75" cy="75" r="65"></circle>
+                    </svg>
+                    <div class="progress-content">
+                        <span class="progress-icon">■</span>
+                        <span class="progress-value" id="ordersCount">0</span>
+                    </div>
+                </div>
+                <div class="stat-label">Orders</div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="ordersBar">
+                        <span class="progress-bar-text" id="ordersBarText">0</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Revenue -->
+            <div class="stat-card">
+                <div class="circular-progress" id="revenueProgress">
+                    <svg viewBox="0 0 150 150">
+                        <circle class="circle-bg" cx="75" cy="75" r="65"></circle>
+                        <circle class="circle-progress" cx="75" cy="75" r="65"></circle>
+                    </svg>
+                    <div class="progress-content">
+                        <span class="progress-icon">﷼</span>
+                        <span class="progress-value" id="revenue">0</span>
+                    </div>
+                </div>
+                <div class="stat-label">Revenue</div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="revenueBar">
+                        <span class="progress-bar-text" id="revenueBarText">0 SAR</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Visits -->
+            <div class="stat-card">
+                <div class="circular-progress" id="visitsProgress">
+                    <svg viewBox="0 0 150 150">
+                        <circle class="circle-bg" cx="75" cy="75" r="65"></circle>
+                        <circle class="circle-progress" cx="75" cy="75" r="65"></circle>
+                    </svg>
+                    <div class="progress-content">
+                        <span class="progress-icon">📈</span>
+                        <span class="progress-value" id="visitsCount">0</span>
+                    </div>
+                </div>
+                <div class="stat-label">Visits</div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="visitsBar">
+                        <span class="progress-bar-text" id="visitsBarText">0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Employee Activity Log -->
+        <h2 class="section-header">Activity Log</h2>
+        
+        <div class="activity-section" id="activitySection">
+            <h3 class="section-title">Employee Activities</h3>
+            
+            <!-- Access Denied Overlay (shown for non-admin) -->
+            <div class="activity-overlay">
+                <div class="activity-overlay-icon">🔒</div>
+                <div class="activity-overlay-title">Admin Access Required</div>
+                <div class="activity-overlay-text">You don't have permission to view this section</div>
+            </div>
+            
+            <table class="activity-table">
+                <thead>
+                    <tr>
+                        <th>Date & Time</th>
+                        <th>Employee</th>
+                        <th>Action</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody id="activityTableBody">
+                    <!-- Activity rows will be inserted here -->
+                </tbody>
+            </table>
+            
+            <div class="empty-state" id="emptyState" style="display: none;">
+                No activity recorded yet
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p class="footer-text">
+            <span class="footer-title">⚠️ CONFIDENTIAL & RESTRICTED ACCESS ⚠️</span>
+            This administrative system is strictly monitored and secured for authorized Malgré employees only. All activities, modifications, and data access are permanently logged and tracked for security purposes. Unauthorized access, misuse, sharing of credentials, or disclosure of confidential information is strictly prohibited and will result in immediate termination and legal prosecution. By accessing this dashboard, you acknowledge full responsibility and compliance with company security policies and confidentiality agreements.
+            <span class="footer-copyright">© 2025 Malgré - All Rights Reserved</span>
+        </p>
+    </footer>
+
+    <script>
+        // Check authentication
+        if (sessionStorage.getItem('adminLoggedIn') !== 'true' || sessionStorage.getItem('pinVerified') !== 'true') {
+            window.location.href = 'admin-login.html';
+        }
+        
+        // Get employee data from session
+        const employeeData = JSON.parse(sessionStorage.getItem('userData')) || {
+            name: 'Unknown User',
+            id: 'N/A',
+            role: 'employee'
+        };
+        
+        // Check if user has admin access
+        const hasAdminAccess = employeeData.role === 'admin';
+        
+        // Show welcome popup
+        function showWelcomePopup() {
+            document.getElementById('employeeName').textContent = employeeData.name;
+            document.getElementById('employeeId').textContent = `Employee ID: ${employeeData.id}`;
+            
+            setTimeout(() => {
+                document.getElementById('welcomePopup').classList.add('show');
+            }, 500);
+        }
+        
+        // Apply access restrictions
+        function applyAccessRestrictions() {
+            if (!hasAdminAccess) {
+                // Blur activity log for non-admin users
+                document.getElementById('activitySection').classList.add('blurred');
+            }
+        }
+        
+        // Close welcome popup
+        function closeWelcomePopup() {
+            document.getElementById('welcomePopup').classList.remove('show');
+        }
+        
+        // Sample data (في الإنتاج راح يجي من قاعدة البيانات)
+        const stats = {
+            customers: {
+                value: 247,
+                max: 300,
+                get percent() { return (this.value / this.max) * 100; }
+            },
+            orders: {
+                value: 156,
+                max: 200,
+                get percent() { return (this.value / this.max) * 100; }
+            },
+            revenue: {
+                value: 70200,
+                max: 100000,
+                get percent() { return (this.value / this.max) * 100; }
+            },
+            visits: {
+                value: 3429,
+                max: 5000,
+                get percent() { return (this.value / this.max) * 100; }
+            }
+        };
+        
+        // Animate numbers
+        function animateValue(elementId, start, end, duration, isCurrency = false) {
+            const obj = document.getElementById(elementId);
+            const range = end - start;
+            const increment = range / (duration / 16);
+            let current = start;
+            
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= end) {
+                    if (isCurrency) {
+                        obj.textContent = end.toLocaleString();
+                    } else {
+                        obj.textContent = end.toLocaleString();
+                    }
+                    clearInterval(timer);
+                } else {
+                    if (isCurrency) {
+                        obj.textContent = Math.floor(current).toLocaleString();
+                    } else {
+                        obj.textContent = Math.floor(current).toLocaleString();
+                    }
+                }
+            }, 16);
+        }
+        
+        // Load stats with circular progress and bars
+        function loadStats() {
+            // Customers
+            setTimeout(() => {
+                document.getElementById('customersProgress').style.setProperty('--progress', stats.customers.percent);
+                document.getElementById('customersProgress').classList.add('animate');
+                document.getElementById('customersBar').style.setProperty('--bar-width', stats.customers.percent + '%');
+                document.getElementById('customersBar').classList.add('animate');
+                animateValue('customersCount', 0, stats.customers.value, 1800);
+                animateValue('customersBarText', 0, stats.customers.value, 1800);
+            }, 100);
+            
+            // Orders
+            setTimeout(() => {
+                document.getElementById('ordersProgress').style.setProperty('--progress', stats.orders.percent);
+                document.getElementById('ordersProgress').classList.add('animate');
+                document.getElementById('ordersBar').style.setProperty('--bar-width', stats.orders.percent + '%');
+                document.getElementById('ordersBar').classList.add('animate');
+                animateValue('ordersCount', 0, stats.orders.value, 1800);
+                animateValue('ordersBarText', 0, stats.orders.value, 1800);
+            }, 300);
+            
+            // Revenue
+            setTimeout(() => {
+                document.getElementById('revenueProgress').style.setProperty('--progress', stats.revenue.percent);
+                document.getElementById('revenueProgress').classList.add('animate');
+                document.getElementById('revenueBar').style.setProperty('--bar-width', stats.revenue.percent + '%');
+                document.getElementById('revenueBar').classList.add('animate');
+                animateValue('revenue', 0, stats.revenue.value, 1800, true);
+                // Update bar text for revenue
+                let revenueStart = 0;
+                const revenueTimer = setInterval(() => {
+                    revenueStart += (stats.revenue.value / (1800 / 16));
+                    if (revenueStart >= stats.revenue.value) {
+                        document.getElementById('revenueBarText').textContent = stats.revenue.value.toLocaleString() + ' SAR';
+                        clearInterval(revenueTimer);
+                    } else {
+                        document.getElementById('revenueBarText').textContent = Math.floor(revenueStart).toLocaleString() + ' SAR';
+                    }
+                }, 16);
+            }, 500);
+            
+            // Visits
+            setTimeout(() => {
+                document.getElementById('visitsProgress').style.setProperty('--progress', stats.visits.percent);
+                document.getElementById('visitsProgress').classList.add('animate');
+                document.getElementById('visitsBar').style.setProperty('--bar-width', stats.visits.percent + '%');
+                document.getElementById('visitsBar').classList.add('animate');
+                animateValue('visitsCount', 0, stats.visits.value, 1800);
+                animateValue('visitsBarText', 0, stats.visits.value, 1800);
+            }, 700);
+        }
+        
+        const activities = [
+            {
+                datetime: 'Jan 1, 2025 - 10:30 AM',
+                employee: 'Ahmed Al-Otaibi',
+                action: 'Login',
+                actionType: 'login',
+                details: 'Logged into dashboard'
+            },
+            {
+                datetime: 'Jan 1, 2025 - 10:15 AM',
+                employee: 'Fatima Al-Rashid',
+                action: 'Order Update',
+                actionType: 'order',
+                details: 'Changed order #1234 status to "Delivered"'
+            },
+            {
+                datetime: 'Jan 1, 2025 - 09:45 AM',
+                employee: 'Ahmed Al-Otaibi',
+                action: 'Order Update',
+                actionType: 'order',
+                details: 'Changed order #1233 status to "In Transit"'
+            },
+            {
+                datetime: 'Jan 1, 2025 - 09:30 AM',
+                employee: 'Fatima Al-Rashid',
+                action: 'Customer Edit',
+                actionType: 'edit',
+                details: 'Updated phone number for customer #245'
+            },
+            {
+                datetime: 'Jan 1, 2025 - 09:00 AM',
+                employee: 'Ahmed Al-Otaibi',
+                action: 'Login',
+                actionType: 'login',
+                details: 'Logged into dashboard'
+            },
+            {
+                datetime: 'Dec 31, 2024 - 05:30 PM',
+                employee: 'Fatima Al-Rashid',
+                action: 'Comment Added',
+                actionType: 'comment',
+                details: 'Added note to order #1232: "Difficult address"'
+            },
+            {
+                datetime: 'Dec 31, 2024 - 04:15 PM',
+                employee: 'Ahmed Al-Otaibi',
+                action: 'Order Update',
+                actionType: 'order',
+                details: 'Changed order #1231 status to "Delivered"'
+            },
+            {
+                datetime: 'Dec 31, 2024 - 03:00 PM',
+                employee: 'Fatima Al-Rashid',
+                action: 'Customer Edit',
+                actionType: 'edit',
+                details: 'Updated address for customer #243'
+            }
+        ];
+        
+        // Load activity log
+        function loadActivityLog() {
+            const tbody = document.getElementById('activityTableBody');
+            const emptyState = document.getElementById('emptyState');
+            
+            if (activities.length === 0) {
+                emptyState.style.display = 'block';
+                return;
+            }
+            
+            tbody.innerHTML = '';
+            
+            activities.forEach(activity => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>
+                        <div class="activity-date">${activity.datetime.split(' - ')[0]}</div>
+                        <div class="activity-time">${activity.datetime.split(' - ')[1]}</div>
+                    </td>
+                    <td><span class="activity-employee">${activity.employee}</span></td>
+                    <td><span class="activity-action ${activity.actionType}">${activity.action}</span></td>
+                    <td>${activity.details}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+        
+        // Logout
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                sessionStorage.removeItem('adminLoggedIn');
+                sessionStorage.removeItem('pinVerified');
+                window.location.href = 'admin-login.html';
+            }
+        }
+        
+        // Log this session
+        function logActivity() {
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+            const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+            
+            activities.unshift({
+                datetime: `${dateStr} - ${timeStr}`,
+                employee: 'Admin User',
+                action: 'Login',
+                actionType: 'login',
+                details: 'Logged into dashboard'
+            });
+            
+            // Keep only last 20 activities
+            if (activities.length > 20) {
+                activities.pop();
+            }
+            
+            loadActivityLog();
+        }
+        
+        // Initialize
+        loadStats();
+        loadActivityLog();
+        logActivity();
+        showWelcomePopup(); // Show welcome popup on load
+        applyAccessRestrictions(); // Apply role-based restrictions
+    </script>
+</body>
+</html>
