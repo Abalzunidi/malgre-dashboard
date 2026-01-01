@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enter PIN - Malgré</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-weight: 700;
+            background-color: #fffa87;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .main-content {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        
+        .pin-container {
+            width: 100%;
+            max-width: 500px;
+        }
+        
+        .logo-container {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .logo-container img {
+            height: 100px;
+            width: auto;
+        }
+        
+        .pin-box {
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 30px;
+            padding: 3rem 2rem;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+        
+        .pin-title {
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 1rem;
+            color: #000;
+        }
+        
+        .pin-subtitle {
+            font-size: 1.125rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            color: rgba(0,0,0,0.6);
+            font-weight: 400;
+        }
+        
+        .pin-inputs {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+        
+        .pin-input {
+            width: 70px;
+            height: 70px;
+            font-size: 2rem;
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-weight: 700;
+            text-align: center;
+            background: rgba(255,255,255,0.5);
+            border: 3px solid transparent;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+            color: #000;
+        }
+        
+        .pin-input:focus {
+            outline: none;
+            border-color: #000;
+            background: rgba(255,255,255,0.8);
+        }
+        
+        .verify-button {
+            width: 100%;
+            padding: 1rem;
+            font-size: 1.25rem;
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-weight: 700;
+            background: #000;
+            color: #fffa87;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        
+        .verify-button:hover {
+            transform: scale(1.02);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+        }
+        
+        .verify-button:active {
+            transform: scale(0.98);
+        }
+        
+        .error-message {
+            background: #ff4444;
+            color: #fff;
+            padding: 1rem;
+            border-radius: 15px;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            display: none;
+            font-size: 1rem;
+        }
+        
+        .error-message.show {
+            display: block;
+            animation: shake 0.5s;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+        
+        footer {
+            width: 100%;
+            margin-top: auto;
+            padding-bottom: 0;
+        }
+        
+        .footer-text {
+            font-size: 1rem;
+            padding: 2rem 2rem;
+            display: block;
+            width: 100%;
+            color: #fff;
+            background-color: #cc0000;
+            line-height: 1.8;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+            border-top: 4px solid #990000;
+            text-align: center;
+        }
+        
+        .footer-title {
+            font-size: 1.25rem;
+            font-weight: 900;
+            letter-spacing: 1px;
+            margin-bottom: 1rem;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-content">
+        <div class="pin-container">
+            <!-- Logo -->
+            <div class="logo-container">
+                <img src="L2.png" alt="Malgré Logo">
+            </div>
+            
+            <!-- PIN Box -->
+            <div class="pin-box">
+                <h1 class="pin-title">Enter PIN</h1>
+                <p class="pin-subtitle">Enter your 4-digit verification code</p>
+                
+                <div class="error-message" id="errorMessage">
+                    Incorrect PIN. Please try again.
+                </div>
+                
+                <div class="pin-inputs">
+                    <input type="text" maxlength="1" class="pin-input" id="pin1" oninput="moveToNext(this, 'pin2')" onkeydown="handleBackspace(event, this, null)">
+                    <input type="text" maxlength="1" class="pin-input" id="pin2" oninput="moveToNext(this, 'pin3')" onkeydown="handleBackspace(event, this, 'pin1')">
+                    <input type="text" maxlength="1" class="pin-input" id="pin3" oninput="moveToNext(this, 'pin4')" onkeydown="handleBackspace(event, this, 'pin2')">
+                    <input type="text" maxlength="1" class="pin-input" id="pin4" oninput="moveToNext(this, null)" onkeydown="handleBackspace(event, this, 'pin3')">
+                </div>
+                
+                <button class="verify-button" onclick="verifyPIN()">Verify</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p class="footer-text">
+            <span class="footer-title">⚠️ CONFIDENTIAL & RESTRICTED ACCESS ⚠️</span>
+            This system is strictly monitored and secured for authorized Malgré employees only. All activities are logged and tracked. Unauthorized access, misuse, or disclosure of information is strictly prohibited and will result in immediate legal action. By accessing this system, you acknowledge full compliance with company security policies.
+        </p>
+    </footer>
+
+    <script>
+        // Check if user logged in
+        if (sessionStorage.getItem('adminLoggedIn') !== 'true') {
+            window.location.href = 'admin-login.html';
+        }
+        
+        // Correct PIN (مؤقت - في الإنتاج راح يكون في قاعدة بيانات)
+        const CORRECT_PIN = '1234';
+        
+        // Auto-focus first input
+        document.getElementById('pin1').focus();
+        
+        // Move to next input
+        function moveToNext(current, nextId) {
+            // Only allow numbers
+            current.value = current.value.replace(/[^0-9]/g, '');
+            
+            if (current.value.length === 1 && nextId) {
+                document.getElementById(nextId).focus();
+            }
+            
+            // Auto verify when all 4 digits entered
+            if (!nextId && current.value.length === 1) {
+                setTimeout(verifyPIN, 300);
+            }
+        }
+        
+        // Handle backspace
+        function handleBackspace(event, current, prevId) {
+            if (event.key === 'Backspace' && current.value === '' && prevId) {
+                document.getElementById(prevId).focus();
+            }
+        }
+        
+        function verifyPIN() {
+            const pin1 = document.getElementById('pin1').value;
+            const pin2 = document.getElementById('pin2').value;
+            const pin3 = document.getElementById('pin3').value;
+            const pin4 = document.getElementById('pin4').value;
+            
+            const enteredPIN = pin1 + pin2 + pin3 + pin4;
+            const errorMessage = document.getElementById('errorMessage');
+            
+            if (enteredPIN.length !== 4) {
+                return;
+            }
+            
+            if (enteredPIN === CORRECT_PIN) {
+                // Save PIN verified state
+                sessionStorage.setItem('pinVerified', 'true');
+                
+                // Redirect to dashboard
+                window.location.href = 'admin-dashboard.html';
+            } else {
+                // Show error
+                errorMessage.classList.add('show');
+                
+                // Clear all inputs
+                document.getElementById('pin1').value = '';
+                document.getElementById('pin2').value = '';
+                document.getElementById('pin3').value = '';
+                document.getElementById('pin4').value = '';
+                
+                // Focus first input
+                document.getElementById('pin1').focus();
+                
+                // Hide error after 3 seconds
+                setTimeout(() => {
+                    errorMessage.classList.remove('show');
+                }, 3000);
+            }
+        }
+    </script>
+</body>
+</html>
