@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الطلبات المرتجعة - Malgré</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-weight: 700;
+            background-color: #fffa87;
+            min-height: 100vh;
+        }
+        
+        /* Header */
+        .header {
+            background: #000;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        
+        .back-btn {
+            background: #fffa87;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            text-decoration: none;
+            color: #000;
+        }
+        
+        .logo {
+            height: 50px;
+            width: auto;
+            filter: brightness(0) invert(1);
+        }
+        
+        .page-title {
+            font-size: 1.2rem;
+            color: #fffa87;
+        }
+        
+        /* Main Content */
+        .main-content {
+            padding: 1rem;
+            min-height: calc(100vh - 70px);
+        }
+        
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.8rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .stat-box {
+            background: rgba(0,0,0,0.05);
+            border: 2px solid rgba(0,0,0,0.1);
+            border-radius: 12px;
+            padding: 1rem;
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 0.3rem;
+        }
+        
+        .stat-label {
+            font-size: 0.75rem;
+            color: rgba(0,0,0,0.6);
+            text-transform: uppercase;
+        }
+        
+        .content-box {
+            background: rgba(0,0,0,0.05);
+            border: 2px solid rgba(0,0,0,0.1);
+            border-radius: 15px;
+            padding: 1.2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .box-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .box-title {
+            font-size: 1.1rem;
+            color: #000;
+        }
+        
+        .filter-btn {
+            background: #000;
+            color: #fffa87;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: 'Cormorant Garamond', Georgia, serif;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: rgba(0,0,0,0.3);
+        }
+        
+        .empty-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+        
+        .empty-text {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .empty-subtext {
+            font-size: 0.9rem;
+            font-weight: 400;
+        }
+        
+        /* Return Card */
+        .return-card {
+            background: rgba(255,255,255,0.6);
+            border: 2px solid rgba(0,0,0,0.1);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 0.8rem;
+        }
+        
+        .return-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 0.8rem;
+        }
+        
+        .return-number {
+            font-size: 1rem;
+            color: #000;
+            font-weight: 700;
+        }
+        
+        .return-date {
+            font-size: 0.75rem;
+            color: rgba(0,0,0,0.5);
+            font-weight: 400;
+        }
+        
+        .return-status {
+            background: #000;
+            color: #fffa87;
+            padding: 0.4rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.75rem;
+        }
+        
+        .return-status.pending {
+            background: #f39c12;
+        }
+        
+        .return-status.approved {
+            background: #2ecc71;
+        }
+        
+        .return-status.rejected {
+            background: #e74c3c;
+        }
+        
+        .return-info {
+            font-size: 0.85rem;
+            color: rgba(0,0,0,0.7);
+            line-height: 1.5;
+        }
+        
+        .return-reason {
+            background: rgba(0,0,0,0.05);
+            padding: 0.7rem;
+            border-radius: 8px;
+            margin-top: 0.8rem;
+            font-size: 0.8rem;
+            font-weight: 400;
+            color: rgba(0,0,0,0.7);
+        }
+        
+        .return-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 0.8rem;
+        }
+        
+        .return-total {
+            font-size: 1.1rem;
+            color: #000;
+            font-weight: 700;
+        }
+        
+        .action-btns {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .approve-btn, .reject-btn {
+            border: none;
+            padding: 0.4rem 0.9rem;
+            border-radius: 15px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: 'Cormorant Garamond', Georgia, serif;
+        }
+        
+        .approve-btn {
+            background: #2ecc71;
+            color: #fff;
+        }
+        
+        .reject-btn {
+            background: #e74c3c;
+            color: #fff;
+        }
+        
+        /* Footer */
+        footer {
+            margin-top: 2rem;
+        }
+        
+        .footer-text {
+            font-size: 0.7rem;
+            padding: 1rem;
+            color: #fff;
+            background-color: #cc0000;
+            line-height: 1.5;
+            font-weight: 700;
+            border-top: 3px solid #990000;
+            text-align: center;
+        }
+        
+        @media (min-width: 768px) {
+            .header {
+                padding: 1.2rem 1.5rem;
+            }
+            
+            .logo {
+                height: 60px;
+            }
+            
+            .page-title {
+                font-size: 1.4rem;
+            }
+            
+            .main-content {
+                padding: 1.5rem;
+                max-width: 1200px;
+                margin: 0 auto;
+            }
+            
+            .stats-row {
+                gap: 1rem;
+            }
+            
+            .content-box {
+                padding: 1.5rem;
+            }
+            
+            .box-title {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <div class="header">
+        <div class="header-left">
+            <a href="admin-dashboard.html" class="back-btn">→</a>
+            <img src="L2.png" alt="Malgré Logo" class="logo">
+            <h1 class="page-title">الطلبات المرتجعة</h1>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        
+        <!-- Stats -->
+        <div class="stats-row">
+            <div class="stat-box">
+                <div class="stat-number">0</div>
+                <div class="stat-label">إجمالي</div>
+            </div>
+            
+            <div class="stat-box">
+                <div class="stat-number">0</div>
+                <div class="stat-label">قيد المراجعة</div>
+            </div>
+            
+            <div class="stat-box">
+                <div class="stat-number">0</div>
+                <div class="stat-label">مقبولة</div>
+            </div>
+        </div>
+        
+        <!-- Returns List -->
+        <div class="content-box">
+            <div class="box-header">
+                <h2 class="box-title">جميع المرتجعات</h2>
+                <button class="filter-btn">فلترة</button>
+            </div>
+            
+            <!-- Empty State -->
+            <div class="empty-state">
+                <div class="empty-icon">↩️</div>
+                <div class="empty-text">لا توجد طلبات مرتجعة</div>
+                <div class="empty-subtext">ستظهر الطلبات المرتجعة هنا</div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p class="footer-text">
+            © 2025 Malgré - جميع الحقوق محفوظة
+        </p>
+    </footer>
+
+    <script>
+        // Check authentication
+        if (sessionStorage.getItem('adminLoggedIn') !== 'true' || sessionStorage.getItem('pinVerified') !== 'true') {
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>

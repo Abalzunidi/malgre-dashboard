@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>معلومات العملاء - Malgré</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-weight: 700;
+            background-color: #fffa87;
+            min-height: 100vh;
+        }
+        
+        /* Header */
+        .header {
+            background: #000;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        
+        .back-btn {
+            background: #fffa87;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            text-decoration: none;
+            color: #000;
+        }
+        
+        .logo {
+            height: 50px;
+            width: auto;
+            filter: brightness(0) invert(1);
+        }
+        
+        .page-title {
+            font-size: 1.2rem;
+            color: #fffa87;
+        }
+        
+        /* Main Content */
+        .main-content {
+            padding: 1rem;
+            min-height: calc(100vh - 70px);
+        }
+        
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.8rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .stat-box {
+            background: rgba(0,0,0,0.05);
+            border: 2px solid rgba(0,0,0,0.1);
+            border-radius: 12px;
+            padding: 1rem;
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 0.3rem;
+        }
+        
+        .stat-label {
+            font-size: 0.75rem;
+            color: rgba(0,0,0,0.6);
+            text-transform: uppercase;
+        }
+        
+        .search-box {
+            background: rgba(0,0,0,0.05);
+            border: 2px solid rgba(0,0,0,0.1);
+            border-radius: 15px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 0.8rem;
+            font-size: 0.95rem;
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-weight: 600;
+            background: rgba(255,255,255,0.5);
+            border: 2px solid transparent;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            color: #000;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: #000;
+            background: rgba(255,255,255,0.8);
+        }
+        
+        .content-box {
+            background: rgba(0,0,0,0.05);
+            border: 2px solid rgba(0,0,0,0.1);
+            border-radius: 15px;
+            padding: 1.2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .box-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .box-title {
+            font-size: 1.1rem;
+            color: #000;
+        }
+        
+        .sort-btn {
+            background: #000;
+            color: #fffa87;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: 'Cormorant Garamond', Georgia, serif;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: rgba(0,0,0,0.3);
+        }
+        
+        .empty-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+        
+        .empty-text {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .empty-subtext {
+            font-size: 0.9rem;
+            font-weight: 400;
+        }
+        
+        /* Customer Card */
+        .customer-card {
+            background: rgba(255,255,255,0.6);
+            border: 2px solid rgba(0,0,0,0.1);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 0.8rem;
+        }
+        
+        .customer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 0.8rem;
+        }
+        
+        .customer-name {
+            font-size: 1rem;
+            color: #000;
+            font-weight: 700;
+        }
+        
+        .customer-id {
+            font-size: 0.75rem;
+            color: rgba(0,0,0,0.5);
+            font-weight: 400;
+        }
+        
+        .customer-badge {
+            background: #000;
+            color: #fffa87;
+            padding: 0.4rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.75rem;
+        }
+        
+        .customer-badge.vip {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            color: #000;
+        }
+        
+        .customer-info {
+            font-size: 0.85rem;
+            color: rgba(0,0,0,0.7);
+            line-height: 1.7;
+            font-weight: 400;
+        }
+        
+        .customer-info strong {
+            font-weight: 700;
+            color: #000;
+        }
+        
+        .customer-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 0.8rem;
+            padding-top: 0.8rem;
+            border-top: 1px solid rgba(0,0,0,0.1);
+        }
+        
+        .customer-stat {
+            text-align: center;
+        }
+        
+        .customer-stat-value {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #000;
+        }
+        
+        .customer-stat-label {
+            font-size: 0.7rem;
+            color: rgba(0,0,0,0.5);
+            text-transform: uppercase;
+        }
+        
+        /* Footer */
+        footer {
+            margin-top: 2rem;
+        }
+        
+        .footer-text {
+            font-size: 0.7rem;
+            padding: 1rem;
+            color: #fff;
+            background-color: #cc0000;
+            line-height: 1.5;
+            font-weight: 700;
+            border-top: 3px solid #990000;
+            text-align: center;
+        }
+        
+        @media (min-width: 768px) {
+            .header {
+                padding: 1.2rem 1.5rem;
+            }
+            
+            .logo {
+                height: 60px;
+            }
+            
+            .page-title {
+                font-size: 1.4rem;
+            }
+            
+            .main-content {
+                padding: 1.5rem;
+                max-width: 1200px;
+                margin: 0 auto;
+            }
+            
+            .stats-row {
+                gap: 1rem;
+            }
+            
+            .search-box {
+                padding: 1.2rem;
+            }
+            
+            .content-box {
+                padding: 1.5rem;
+            }
+            
+            .box-title {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <div class="header">
+        <div class="header-left">
+            <a href="admin-dashboard.html" class="back-btn">→</a>
+            <img src="L2.png" alt="Malgré Logo" class="logo">
+            <h1 class="page-title">معلومات العملاء</h1>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        
+        <!-- Stats -->
+        <div class="stats-row">
+            <div class="stat-box">
+                <div class="stat-number">0</div>
+                <div class="stat-label">إجمالي العملاء</div>
+            </div>
+            
+            <div class="stat-box">
+                <div class="stat-number">0</div>
+                <div class="stat-label">عملاء VIP</div>
+            </div>
+            
+            <div class="stat-box">
+                <div class="stat-number">0</div>
+                <div class="stat-label">جدد هذا الشهر</div>
+            </div>
+        </div>
+        
+        <!-- Search -->
+        <div class="search-box">
+            <input type="text" class="search-input" placeholder="🔍 ابحث عن عميل (الاسم، البريد، رقم الجوال...)">
+        </div>
+        
+        <!-- Customers List -->
+        <div class="content-box">
+            <div class="box-header">
+                <h2 class="box-title">جميع العملاء</h2>
+                <button class="sort-btn">ترتيب</button>
+            </div>
+            
+            <!-- Empty State -->
+            <div class="empty-state">
+                <div class="empty-icon">👥</div>
+                <div class="empty-text">لا توجد بيانات عملاء</div>
+                <div class="empty-subtext">ستظهر معلومات العملاء هنا</div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p class="footer-text">
+            © 2025 Malgré - جميع الحقوق محفوظة
+        </p>
+    </footer>
+
+    <script>
+        // Check authentication
+        if (sessionStorage.getItem('adminLoggedIn') !== 'true' || sessionStorage.getItem('pinVerified') !== 'true') {
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>
